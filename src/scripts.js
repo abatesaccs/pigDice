@@ -1,27 +1,25 @@
-function PigDice(name){
+import {isCPU, npc, dice} from './main.js';
+
+export function PigDice(name){
   this.name = name;
 }
 
-function NPC(diff){
+export function NPC(diff){
   //easy = true, hard = false
   this.difficulty = diff;
 }
-
-var dieOne = 0;
-var dieTwo = 0;
+export var player = true;
 var tempScore = 0;
-var player = true;
 var playerOneScore = 0;
 var playerTwoScore = 0;
 var doubles = false;
 var compScore = 0;
-var cpuRolls = 0;
-var isCPU = false;
+isCPU = false;
 
 
 PigDice.prototype.rollDie = function(min, max) {
   return Math.random() * (max - min);
-}
+};
 
 NPC.prototype.hardRoll = function(){
   //if turn score is < 20 then roll again
@@ -59,12 +57,12 @@ NPC.prototype.hardRoll = function(){
   if (tempCompVal > 20 && notBusted) {
     npc.npcHold(tempCompVal);
   }
-}
+};
 
 NPC.prototype.npcRoll = function(diff) {
   var cpuRolls = 0;
   var cpuHadOne = false;
-  $("#currentPlayer").html(name2 + ": ")
+  $("#currentPlayer").html("Computer: ");
 
   if (diff === "easy") {
     var cpuDieOne = 0;
@@ -104,17 +102,17 @@ NPC.prototype.npcRoll = function(diff) {
     console.log("hard");
     npc.hardRoll();
   }
-}
+};
 
 NPC.prototype.npcHold = function(turnVal){
   compScore += turnVal;
   player = true;
   if (compScore >= 100) {
-    $(".results").html("<p>" + name2 + " Wins!</p><br>");
+    $(".results").html("<p>The Computer Wins!</p><br>");
     $("button#reset").show();
   }
   $("#playerTwoResults").html(" " + compScore);
-}
+};
 
 PigDice.prototype.roll = function(){
   var dieOne = Math.ceil(dice.rollDie(1, 7));
@@ -163,7 +161,7 @@ PigDice.prototype.roll = function(){
     return tempScore;
   }
   // return tempScore;
-}
+};
 
 PigDice.prototype.hold = function(){
   if (player) {
@@ -172,7 +170,7 @@ PigDice.prototype.hold = function(){
     tempScore = 0;
     $("#currentScore").html("");
     if (playerOneScore >= 100) {
-      $(".results").html("<p>" + name1 + " Wins!</p><br>");
+      $(".results").html("<p>Player 1 Wins!</p><br>");
       $("button#reset").show();
     } else {
       if (isCPU) {
@@ -187,91 +185,10 @@ PigDice.prototype.hold = function(){
     tempScore = 0;
     $("#currentScore").html("");
     if (playerTwoScore >= 100) {
-      $(".results").html("<p>" + name2 + " Wins!</p><br>");
+      $(".results").html("<p>Player 2 Wins!</p><br>");
       $("button#reset").show();
     } else {
       return playerTwoScore;
     }
   }
-}
-
-var dice = new PigDice("player");
-var npc = new NPC("");
-var name1 = "";
-var name2 = "";
-
-$(document).ready(function(event){
-
-  $("button#2player").click(function(){
-    $("#twoPlayer").show();
-    $("#gameMode").hide();
-  });
-
-  $("button#computer").click(function(){
-    $("#difficulty").show();
-    $("#gameMode").hide();
-    isCPU = true;
-  });
-
-  $("#easy").click(function(){
-    npc.difficulty = "easy";
-    $("#onePlayer").show();
-    $("#difficulty").hide();
-  });
-
-  $("#hard").click(function(){
-    npc.difficulty = "hard";
-    $("#onePlayer").show();
-    $("#difficulty").hide();
-  });
-
-  $("#onePlayerName").click(function(){
-    dice.name = $("#playerName").val();
-    name1 = dice.name;
-    name2 = "Computer"
-    $("#scoreName1").html(name1);
-    $("#scoreName2").html(name2);
-    $("#resultsBlock").show();
-    $("div#playButtons").show();
-    $("#onePlayer").hide();
-  });
-
-  $("button#names").click(function(event){
-    event.preventDefault();
-    name1 = $("#playerOne").val();
-    name2 = $("#playerTwo").val();
-    $("#scoreName1").html(name1);
-    $("#scoreName2").html(name2);
-    $("div#playButtons").show();
-    $("#resultsBlock").show();
-    $("#twoPlayer").hide();
-  });
-
-  $("button#roll").click(function(event){
-    event.preventDefault();
-    if (player) {
-      $("#currentPlayer").html(name1 + ": ");
-    } else if (!player) {
-      $("#currentPlayer").html(name2 + ": ");
-    }
-    $("#currentScore").html(dice.roll());
-  });
-
-  $("button#hold").click(function(event){
-    event.preventDefault();
-    console.log("held");
-
-    if (player) {
-      $("#currentPlayer").html(name2 + ": ");
-      $("#playerOneResults").html(" " + dice.hold());
-    } else if (!player) {
-      $("#currentPlayer").html(name1 + ": ");
-      $("#playerTwoResults").html(" " + dice.hold());
-    }
-  });
-
-  $("button#reset").click(function(event){
-    event.preventDefault();
-    location.reload(true);
-  });
-});
+};
